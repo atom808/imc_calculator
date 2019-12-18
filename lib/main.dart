@@ -27,12 +27,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
+  TextEditingController weightController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+
+  String _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
+
+  void imcCalc(){
     setState(() {
-      _counter++;
+      double weight = double.parse(weightController.text);
+      double height = double.parse(heightController.text) / 100;
+      double result = weight / (height * height);
+      if (result < 18.6){
+        _infoText = "Abaixo do Peso (${result.toStringAsPrecision(4)})";
+      } else if (18.6 <= result){
+        _infoText = "Peso Ideal (${result.toStringAsPrecision(4)})";
+      }
     });
+  }
+
+  void resetField(){
+    weightController.text = "";
+    heightController.text = "";
+    _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
   }
 
   @override
@@ -41,12 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text("Calculadora de IMC"),
         centerTitle: true,
-        actions: <Widget> [IconButton(
-          icon: Icon(
-            Icons.update,
-            color: Colors.white,
-          ),
-          onPressed: null,
+        actions: <Widget> [
+          IconButton(
+            icon: Icon(
+              Icons.update,
+              color: Colors.white,
+            ),
+          onPressed: resetField,
         )]
       ),
       backgroundColor: Colors.indigo[50],
@@ -78,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   TextField(
+                    controller: weightController,
                     maxLines: 1,
                     maxLength: 5,
                     decoration: InputDecoration(
@@ -87,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     autofocus: true,
                   ),
                   TextField(
+                    controller: heightController,
                     maxLines: 1,
                     maxLength: 3,
                     decoration: InputDecoration(
@@ -101,7 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     child: RaisedButton(
                       textColor: Colors.white,
-                      onPressed: () => null,
+                      onPressed: (){
+                        imcCalc();
+                      },
                       color: Colors.indigo,
                       child: Text(
                         "Calcular IMC",
@@ -109,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   Text(
-                    "25.9",
+                    _infoText,
                     style: TextStyle(
 
                     ),
