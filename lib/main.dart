@@ -38,10 +38,16 @@ class _MyHomePageState extends State<MyHomePage> {
       double weight = double.parse(weightController.text);
       double height = double.parse(heightController.text) / 100;
       double result = weight / (height * height);
-      if (result < 18.6){
+      if (result < 18.5){
         _infoText = "Abaixo do Peso (${result.toStringAsPrecision(4)})";
-      } else if (18.6 <= result){
+      } else if (18.5 <= result && 24.9 >= result){
         _infoText = "Peso Ideal (${result.toStringAsPrecision(4)})";
+      } else if (25.0 <= result && 29.9 >= result){
+        _infoText = "Sobrepeso (${result.toStringAsPrecision(4)})";
+      } else if (30.0 <= result && 39.9 >= result){
+        _infoText = "Obesidade (${result.toStringAsPrecision(4)})";
+      } else {
+        _infoText = "Obesidade Grave (${result.toStringAsPrecision(4)})";
       }
     });
   }
