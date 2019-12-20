@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,7 +18,32 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: SplashScreen(
+        seconds: 2,
+        navigateAfterSeconds: AfterSplash(),
+        backgroundColor: Colors.indigo,
+        title: Text(
+          "Calculadora de IMC",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AfterSplash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'IMC Calculator',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      home: MyHomePage(),
     );
   }
 }
@@ -46,8 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
         _infoText = "Sobrepeso (${result.toStringAsPrecision(4)})";
       } else if (30.0 <= result && 39.9 >= result){
         _infoText = "Obesidade (${result.toStringAsPrecision(4)})";
-      } else {
+      } else if (40 <= result){
         _infoText = "Obesidade Grave (${result.toStringAsPrecision(4)})";
+      } else {
+        _infoText = "Insira dados válidos.";
       }
     });
   }
@@ -109,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       labelText: "Peso (kg)",
                       hintText: "18,43",
                     ),
-                    autofocus: true,
+                    autofocus: false,
                   ),
                   TextField(
                     controller: heightController,
