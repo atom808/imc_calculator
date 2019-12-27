@@ -19,14 +19,16 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.indigo,
       ),
       home: SplashScreen(
-        seconds: 2,
+        seconds: 3,
         navigateAfterSeconds: AfterSplash(),
         backgroundColor: Colors.indigo,
+        loaderColor: Colors.white,
         title: Text(
           "Calculadora de IMC",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 28,
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -64,8 +66,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
   String _resultText = "";
+//  bool _isButtonDisabled = true;
 
   void imcCalc(){
+
     setState(() {
       double weight = double.parse(weightController.text);
       double height = double.parse(heightController.text) / 100;
@@ -97,6 +101,16 @@ class _MyHomePageState extends State<MyHomePage> {
     _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
     _resultText = "- -";
   }
+
+/* //função para detectar quando o textField estiver diferente de null
+  void _textFieldChanged(){
+    String weightStr = weightController.text;
+    String heightStr = heightController.text;
+    if (heightStr != null && weightStr != null){
+      _isButtonDisabled = false;
+    }
+  }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       hintText: "Ex: 78.43",
                     ),
                     autofocus: false,
+//                    onChanged: null,
                   ),
                   TextField(
                     controller: heightController,
@@ -160,6 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       hintText: "Ex: 176",
                     ),
                     autofocus: false,
+//                    onChanged: null,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -204,3 +220,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
