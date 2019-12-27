@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,7 +18,34 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: SplashScreen(
+        seconds: 3,
+        navigateAfterSeconds: AfterSplash(),
+        backgroundColor: Colors.indigo,
+        loaderColor: Colors.white,
+        title: Text(
+          "Calculadora de IMC",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AfterSplash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'IMC Calculator',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      home: MyHomePage(),
     );
   }
 }
@@ -32,22 +65,32 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController heightController = TextEditingController();
 
   String _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
+  String _resultText = "";
+//  bool _isButtonDisabled = true;
 
   void imcCalc(){
+
     setState(() {
       double weight = double.parse(weightController.text);
       double height = double.parse(heightController.text) / 100;
       double result = weight / (height * height);
       if (result < 18.5){
-        _infoText = "Abaixo do Peso (${result.toStringAsPrecision(4)})";
+        _infoText = "Abaixo do Peso";
+        _resultText = "${result.toStringAsPrecision(4)}";
       } else if (18.5 <= result && 24.9 >= result){
-        _infoText = "Peso Ideal (${result.toStringAsPrecision(4)})";
+        _infoText = "Peso Ideal";
+        _resultText = "${result.toStringAsPrecision(4)}";
       } else if (25.0 <= result && 29.9 >= result){
-        _infoText = "Sobrepeso (${result.toStringAsPrecision(4)})";
+        _infoText = "Sobrepeso";
+        _resultText = "${result.toStringAsPrecision(4)}";
       } else if (30.0 <= result && 39.9 >= result){
-        _infoText = "Obesidade (${result.toStringAsPrecision(4)})";
+        _infoText = "Obesidade";
+        _resultText = "${result.toStringAsPrecision(4)}";
+      } else if (40 <= result){
+        _infoText = "Obesidade Grave";
+        _resultText = "${result.toStringAsPrecision(4)}";
       } else {
-        _infoText = "Obesidade Grave (${result.toStringAsPrecision(4)})";
+        _infoText = "Insira dados válidos.";
       }
     });
   }
@@ -56,7 +99,18 @@ class _MyHomePageState extends State<MyHomePage> {
     weightController.text = "";
     heightController.text = "";
     _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
+    _resultText = "- -";
   }
+
+/* //função para detectar quando o textField estiver diferente de null
+  void _textFieldChanged(){
+    String weightStr = weightController.text;
+    String heightStr = heightController.text;
+    if (heightStr != null && weightStr != null){
+      _isButtonDisabled = false;
+    }
+  }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +161,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     maxLength: 5,
                     decoration: InputDecoration(
                       labelText: "Peso (kg)",
-                      hintText: "18,43",
+                      hintText: "Ex: 78.43",
                     ),
-                    autofocus: true,
+                    autofocus: false,
+//                    onChanged: null,
                   ),
                   TextField(
                     controller: heightController,
@@ -117,9 +172,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     maxLength: 3,
                     decoration: InputDecoration(
                       labelText: "Altura (cm)",
-                      hintText: "176",
+                      hintText: "Ex: 176",
                     ),
                     autofocus: false,
+//                    onChanged: null,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -127,6 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     child: RaisedButton(
                       textColor: Colors.white,
+                      autofocus: true,
                       onPressed: (){
                         imcCalc();
                       },
@@ -136,11 +193,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                  Text(
-                    _infoText,
-                    style: TextStyle(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        _infoText,
+                        style: TextStyle(
 
-                    ),
+                        ),
+                      ),
+                      Text(
+                        _resultText,
+                        style: TextStyle(
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -151,3 +220,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
