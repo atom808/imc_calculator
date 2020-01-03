@@ -64,6 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController weightController = TextEditingController();
   TextEditingController heightController = TextEditingController();
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
   String _resultText = "";
 //  bool _isButtonDisabled = true;
@@ -101,6 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
       _resultText = "";
+      _formKey = GlobalKey<FormState>();
     });
   }
 
@@ -133,87 +136,104 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20.0),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            elevation: 4.0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 0.0,
+          child: Form(
+            key: _formKey,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
               ),
-              height: 500.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12.0,
+              elevation: 4.0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 0.0,
+                ),
+                height: 500.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12.0,
+                      ),
+                      child: Icon(
+                        Icons.person,
+                        size: 120.0,
+                        color: Colors.indigo,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.person,
-                      size: 120.0,
-                      color: Colors.indigo,
-                    ),
-                  ),
-                  TextField(
-                    controller: weightController,
-                    maxLines: 1,
-                    maxLength: 5,
-                    decoration: InputDecoration(
-                      labelText: "Peso (kg)",
-                      hintText: "Ex: 78.43",
-                    ),
-                    autofocus: false,
-//                    onChanged: null,
-                  ),
-                  TextField(
-                    controller: heightController,
-                    maxLines: 1,
-                    maxLength: 3,
-                    decoration: InputDecoration(
-                      labelText: "Altura (cm)",
-                      hintText: "Ex: 176",
-                    ),
-                    autofocus: false,
-//                    onChanged: null,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 24.0,
-                    ),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      autofocus: true,
-                      onPressed: (){
-                        imcCalc();
+                    TextFormField(
+                      controller: weightController,
+                      validator: (value){
+                        if(value.isEmpty){
+                          return "Insira seu peso.";
+                        }
                       },
-                      color: Colors.indigo,
-                      child: Text(
-                        "Calcular IMC",
+                      maxLines: 1,
+                      maxLength: 5,
+                      decoration: InputDecoration(
+                        labelText: "Peso (kg)",
+                        hintText: "Ex: 78.43",
+                      ),
+                      autofocus: false,
+//                    onChanged: null,
+                    ),
+                    TextFormField(
+                      controller: heightController,
+                      validator: (value){
+                        if(value.isEmpty){
+                          return "Insira a sua altura.";
+                        }
+                      },
+                      maxLines: 1,
+                      maxLength: 3,
+                      decoration: InputDecoration(
+                        labelText: "Altura (cm)",
+                        hintText: "Ex: 176",
+                      ),
+                      autofocus: false,
+//                    onChanged: null,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 24.0,
+                      ),
+                      child: RaisedButton(
+                        textColor: Colors.white,
+                        autofocus: true,
+                        onPressed: (){
+                          if(_formKey.currentState.validate()){
+                            imcCalc();
+                          } else {
+                            setState(() {});
+                          }
+                        },
+                        color: Colors.indigo,
+                        child: Text(
+                          "Calcular IMC",
+                        ),
                       ),
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        _infoText,
-                        style: TextStyle(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          _infoText,
+                          style: TextStyle(
 
+                          ),
                         ),
-                      ),
-                      Text(
-                        _resultText,
-                        style: TextStyle(
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          _resultText,
+                          style: TextStyle(
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
