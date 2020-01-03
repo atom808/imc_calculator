@@ -98,8 +98,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void resetField(){
     weightController.text = "";
     heightController.text = "";
-    _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
-    _resultText = "- -";
+    setState(() {
+      _infoText = "Informe seus dados acima para obter o seu Índice de Massa Corpórea.";
+      _resultText = "";
+    });
   }
 
 /* //função para detectar quando o textField estiver diferente de null
